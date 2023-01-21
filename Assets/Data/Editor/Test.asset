@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   _gizmos:
-  - Name: Spawn
-    Position: {x: -0.07600021, y: 1.65, z: 0.03799999}
+  - Name: NotSpawn
+    Position: {x: 0, y: 5, z: 0}
   - Name: End Level
-    Position: {x: -15, y: 2, z: -1}
+    Position: {x: -15, y: 2.64, z: -1}
   - Name: First Fight
     Position: {x: -6.425, y: 1, z: -0.3}
   - Name: PNJ to help
