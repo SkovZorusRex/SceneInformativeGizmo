@@ -22,7 +22,8 @@
    
 ## Missing Features
 
-- Deleting Gizmo will **only** works **visually**, the scriptable object will not change
+- Deleting Gizmo will **only** works **visually**, the scriptable object will not change <br />
+   Technically it's working but is causes errors so I preferred to comment the code that modify the scriptable
 
 ## About The Project
 
@@ -40,10 +41,10 @@ Using a class to keep track of each gizmo related data is a simple way to config
    - En utilisant les onglets Window > Custom > Show Gizmos. <br />
    - Lorsque vous cliquez sur un Scriptable Object SceneGizmoAsset, l'inspecteur affiche un bouton permettant d'ouvrir l'Editor Window en utilisant les informations de sa structure Gizmo. <br />
 2. La fenêtre de l'éditeur affiche les différentes positions du Gizmo avec leur texte. <br />
-3. La vue de la scène affiche tous ces gizmos sous forme de sphères blanches avec le texte de description en noir. <br />
+3. La scène affiche tous ces gizmos sous forme de sphères blanches avec le texte de description en noir. <br />
 4. Les gizmos n'apparaissent que sur la scène, pas en jeu. <br />
 5. Vous pouvez sélectionner un gizmo pour modifier sa position. <br />
-6. Le gizmo sélectionné peut être déplacé directement dans la scène : en utilisant l'outil de déplacement classique pour déplacer un objet. <br />
+6. Le gizmo sélectionné peut être déplacé directement dans la scène : en utilisant l'outil de déplacement classique. <br />
 7. Toutes les modifications sont directement enregistrées dans le SceneGizmoAsset sans action de l'utilisateur. <br />
 8. Vous pouvez faire ctrl+z pour supprimer les derniers changements sur les gizmos. <br />
 9. Un clic droit sur le gizmo fait apparaître un menu qui permet de <br />
@@ -52,7 +53,8 @@ Using a class to keep track of each gizmo related data is a simple way to config
    
 ## Fonctionnalités manquantes
 
-- Supprimer un Gizmo fonctionne **seulement** de manière **visuel**, le scriptable object ne change pas
+- Supprimer un Gizmo fonctionne **seulement** de manière **visuel**, le scriptable object ne change pas <br />
+   Techniquement, cela fonctionne mais provoque des erreurs. J'ai donc préféré commenter le code qui applique les modifications au scriptable.
 
 ## A Propos du Projet
 
