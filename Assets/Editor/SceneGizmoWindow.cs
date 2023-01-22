@@ -83,6 +83,13 @@ public class SceneGizmoWindow : EditorWindow
         if (evt != null)
             currentAsset = (SceneGizmoAsset)evt.newValue;
 
+        //Prevent error when switching to none
+        if (currentAsset == null)
+        {
+            currentSelectedObject = null; //Hide the movement handle if switching when in edit mode
+            return;
+        }
+
         //Using SerializedObject and SerializedProperty will automatically mark the object as dirty, create an undo entry
         baseObject = new UnityEditor.SerializedObject(currentAsset);
 
@@ -167,7 +174,7 @@ public class SceneGizmoWindow : EditorWindow
             if (currentSelectedObject == obj) //Unselect
             {
                 obj.button.style.backgroundColor = Color.grey; //WRONG GREY :(
-                obj.box.style.backgroundColor= Color.clear;
+                obj.box.style.backgroundColor = Color.clear; //WRONG AGAIN (not the original unity color) :(
                 currentSelectedObject = null;
             }
             else //Select
@@ -175,9 +182,9 @@ public class SceneGizmoWindow : EditorWindow
                 if (currentSelectedObject != null) //Reset the previously selected one
                 {
                     currentSelectedObject.button.style.backgroundColor = Color.grey;
-                    currentSelectedObject.box.style.backgroundColor= Color.clear;
+                    currentSelectedObject.box.style.backgroundColor = Color.clear;
                 }
-                obj.box.style.backgroundColor= Color.grey;
+                obj.box.style.backgroundColor = Color.grey;
                 obj.button.style.backgroundColor = Color.red;
                 currentSelectedObject = obj;
             }
@@ -197,7 +204,7 @@ public class SceneGizmoWindow : EditorWindow
             Handles.Label(gizmo.position.vector3Value + new Vector3(0, 1, 0), gizmo.textField.value);
         }
 
-        //Hide the MoveHandle if there is no selected object
+        //Show the MoveHandle if there is a selected object
         if (currentSelectedObject != null)
         {
             //Check for positionChange
@@ -205,7 +212,7 @@ public class SceneGizmoWindow : EditorWindow
             Vector3 newPos = Handles.PositionHandle(currentSelectedObject.position.vector3Value, Quaternion.identity);
             if (EditorGUI.EndChangeCheck())
             {
-                currentSelectedObject.vectorField.value = newPos; //Binding will update both vectorField and Gizmo Position
+                currentSelectedObject.vectorField.value = newPos; //Due to the binding this will update both vectorField and Gizmo Position
             }
         }
 
@@ -218,7 +225,7 @@ public class SceneGizmoWindow : EditorWindow
             {
                 //How far the mouse is from a gizmo sphere
                 float dist = Vector2.Distance(Event.current.mousePosition, HandleUtility.WorldToGUIPoint(gizmo.position.vector3Value));
-                if (dist < 25f) //Arbitrary distance (more or less the size of the sphere
+                if (dist < 25f) //Arbitrary distance (more or less the size of the sphere)
                 {
                     //Debug.Log("In Range of : " + gizmo.textField.value);
                     ShowMenu(gizmo);
@@ -247,16 +254,28 @@ public class SceneGizmoWindow : EditorWindow
     private void DeleteGizmo(object selectedObject)
     {
         var obj = selectedObject as GizmoObject;
-        //int objIndex = gizmoObjects.IndexOf(obj);
-        //Undo.DestroyObjectImmediate(baseObject.FindProperty("_gizmos").GetArrayElementAtIndex(objIndex).objectReferenceValue);
+
+        if (currentSelectedObject == obj) //If the object we are deleting is the one we are editing
+            SetEditMode(obj.button);
+
+        int objIndex = gizmoObjects.IndexOf(obj);
+        //Undo.RecordObject(baseObject.context, "Delete"); //Reverting will restore scriptable obejct element but break editor window ui
         informationContainer.Remove(obj.box);
+        obj.position.DeleteCommand();
+        obj.name.DeleteCommand();
         gizmoObjects.Remove(obj);
-        //obj.textField.Unbind();
-        //obj.vectorField.Unbind();
-        //obj.button.Unbind();
-        //baseObject.FindProperty("_gizmos").GetArrayElementAtIndex(objIndex).objectReferenceValue = null;
-        //baseObject.FindProperty("_gizmos").DeleteArrayElementAtIndex(objIndex);
-        Repaint();
+
+        //Safety unbind
+        obj.textField.Unbind();
+        obj.vectorField.Unbind();
+        obj.button.Unbind();
+
+        // /!\ Will cause error when drawing handle (line 196 & 197) because the property is no longer there
+        //Apparently Fixed in later version : https://issuetracker.unity3d.com/issues/serializedproperty-counters-dot-array-dot-data-1-has-disappeared-error-when-removing-array-item-containing-managed-reference
+        //baseObject.FindProperty("_gizmos").DeleteArrayElementAtIndex(objIndex); //Delete the element
+        //baseObject.ApplyModifiedProperties(); //Save the delete
+
         SceneView.lastActiveSceneView.Repaint();
+        Repaint();
     }
 }

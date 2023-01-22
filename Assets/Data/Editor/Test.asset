@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gizmos:
   - Name: NotSpawn
-    Position: {x: 0, y: 5, z: 0}
+    Position: {x: 0, y: 5, z: -1}
   - Name: End Level
     Position: {x: -15, y: 2.64, z: -1}
   - Name: First Fight
